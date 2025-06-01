@@ -8,12 +8,12 @@ public interface ISadSection
 
   IStridablesListEdit<ISadDocument> listDocuments();
 
-  ISadDocument findDocument( String aDucumentId );
+  ISadDocument findDocument( String aDocumentId );
 
-  ISadDocument getDocument( String aDucumentId );
+  ISadDocument getDocument( String aDocumentId );
 
   IStridablesListEdit<ISadDocument> listArchivedDocuments();
 
-  void setDocumentState( String aDucument, boolean aArchived );
+  void setDocumentState( String aDocument, boolean aArchived );
 
 }
