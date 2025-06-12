@@ -1,5 +1,7 @@
 package org.toxsoft.skf.sad.lib.archive;
 
+import java.time.*;
+
 import org.toxsoft.core.tslib.bricks.strid.*;
 
 public interface IDtoArchivedDocumentInfo
@@ -8,5 +10,9 @@ public interface IDtoArchivedDocumentInfo
   String typeId();
 
   String templateId();
+
+  LocalDateTime archivedtype();
+
+  // VERSIONS ?
 
 }

@@ -29,6 +29,8 @@ import org.toxsoft.uskat.core.connection.*;
 public interface ISkSadService
     extends ISkService {
 
+  // TODO save doc to file / load from file
+
   /**
    * Service identifier.
    */

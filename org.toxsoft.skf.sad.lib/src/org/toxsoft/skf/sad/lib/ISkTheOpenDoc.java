@@ -13,4 +13,9 @@ public interface ISkTheOpenDoc
 
   ISkConnection conn();
 
+  @Override
+  default void close() {
+    conn().close();
+  }
+
 }
