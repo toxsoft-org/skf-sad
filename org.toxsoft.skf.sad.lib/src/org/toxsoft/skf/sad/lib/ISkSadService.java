@@ -4,6 +4,7 @@ import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.bricks.events.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
+import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.sad.lib.archive.*;
 import org.toxsoft.skf.sad.lib.impl.*;
@@ -25,11 +26,10 @@ import org.toxsoft.uskat.core.connection.*;
  *
  * @author hazard157
  */
-@SuppressWarnings( "javadoc" ) // TODO remove after API stabilization
 public interface ISkSadService
     extends ISkService {
 
-  // TODO save doc to file / load from file
+  // TODO save/load doc content to file (or buffer, or any other memento)
 
   /**
    * Service identifier.
@@ -39,13 +39,43 @@ public interface ISkSadService
   // ------------------------------------------------------------------------------------
   // document type management
 
-  IStridablesList<ISkSadDocType> listTypes();
+  /**
+   * Returns all folders.
+   *
+   * @return {@link IStridablesListEdit}&lt;{@link ISkSadFolder}&gt; - the list of folders
+   */
+  IStridablesList<ISkSadFolder> listFolders();
 
-  ISkSadDocType findDocType( String aTypeId );
+  /**
+   * Returns the folder by ID if any found.
+   *
+   * @param aFolderId String - the folder ID
+   * @return {@link ISkSadFolder} - found folder or <code>null</code>
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   */
+  ISkSadFolder findFolder( String aFolderId );
 
-  ISkSadDocType defineDocType( String aTypeId, IOptionSet aParams );
+  /**
+   * Creates the new folder.
+   *
+   * @param aFolderId String - the folder ID (an IDpath)
+   * @param aParams {@link IOptionSet} - application-specific properties of the folder
+   * @return {@link ISkSadFolder} - created folder
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   * @throws TsValidationFailedRtException failed {@link ISkSadServiceValidator}
+   */
+  ISkSadFolder createFolder( String aFolderId, IOptionSet aParams );
 
-  void removeDocType( String aDocType );
+  /**
+   * Removes the folder and it's content.
+   * <p>
+   * Note: all documents and their contents will be permanently lost.
+   *
+   * @param aFolderId String - the folder ID
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   * @throws TsValidationFailedRtException failed {@link ISkSadServiceValidator}
+   */
+  void removeFolder( String aFolderId );
 
   // ------------------------------------------------------------------------------------
   // miscellaneous
@@ -91,8 +121,8 @@ public interface ISkSadService
   // Inline methods for convenience
 
   @SuppressWarnings( "javadoc" )
-  default ISkSadDocType getDocType( String aTypeId ) {
-    return TsItemNotFoundRtException.checkNoNull( findDocType( aTypeId ) );
+  default ISkSadFolder getFolder( String aFolderId ) {
+    return TsItemNotFoundRtException.checkNoNull( findFolder( aFolderId ) );
   }
 
 }

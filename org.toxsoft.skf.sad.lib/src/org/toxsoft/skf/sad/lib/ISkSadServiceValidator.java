@@ -7,8 +7,10 @@ public interface ISkSadServiceValidator {
 
   ValidationResult canCreateDocType( String aTypeId, IOptionSet aParams );
 
-  ValidationResult canEditDocType( ISkSadDocType aDocType, IOptionSet aNewParams );
+  ValidationResult canEditDocType( ISkSadFolder aDocType, IOptionSet aNewParams );
 
   ValidationResult canRemoveDocType( String aTypeId );
+
+  // API for other actions
 
 }

@@ -14,8 +14,10 @@ public interface ISkSadServiceListener {
   // TODO separate document params and content editing events ???
   // TODO document /open/edit/close events
 
-  void onDocumentChanged( ISkSadService aSource, ISkSadDocType aType, ECrudOp aOp, String aDocId );
+  void onDocumentChanged( ISkSadService aSource, ISkSadFolder aType, ECrudOp aOp, String aDocId );
 
   void onDocumentState( ISkSadService aSource, ISkSadDocument aDoc, Object... aFoo );
+
+  // TODO API for other actions
 
 }
