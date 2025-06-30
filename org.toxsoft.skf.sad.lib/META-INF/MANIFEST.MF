@@ -3,6 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: SAD (Stand-Alone Documents) SkService Library
 Bundle-SymbolicName: org.toxsoft.skf.sad.lib
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.toxsoft.skf.sad.lib,
+ org.toxsoft.skf.sad.lib.archive,
+ org.toxsoft.skf.sad.lib.impl
 Require-Bundle: org.toxsoft.core.tslib,
  org.toxsoft.core.txtproj.lib,
  org.toxsoft.uskat.core
