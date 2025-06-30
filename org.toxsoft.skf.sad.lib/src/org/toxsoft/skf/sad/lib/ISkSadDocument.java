@@ -53,6 +53,7 @@ public interface ISkSadDocument
    * Returns the ID of the document used as a template to create this document.
    * <p>
    * If document was created as a new, empty document, returns {@link IStridable#NONE_ID}.
+   * <p>
    *
    * @return String - template document ID or {@link IStridable#NONE_ID}
    */
