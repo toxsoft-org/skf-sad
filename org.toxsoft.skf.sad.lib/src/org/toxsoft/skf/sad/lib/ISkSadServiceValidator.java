@@ -5,12 +5,16 @@ import org.toxsoft.core.tslib.bricks.validator.*;
 
 public interface ISkSadServiceValidator {
 
-  ValidationResult canCreateDocType( String aTypeId, IOptionSet aParams );
+  ValidationResult canCreateFolder( String aFolderId, IOptionSet aParams );
 
-  ValidationResult canEditDocType( ISkSadFolder aDocType, IOptionSet aNewParams );
+  ValidationResult canEditFolderParams( ISkSadFolder aFolder, IOptionSet aNewParams );
 
-  ValidationResult canRemoveDocType( String aTypeId );
+  ValidationResult canRemoveFolder( String aFolderId );
 
-  // API for other actions
+  ValidationResult canCreateDocument( String aDocumentId, IOptionSet aParams );
+
+  ValidationResult canEditDocumentParams( ISkSadDocument aDocument, IOptionSet aNewParams );
+
+  ValidationResult canRemoveDocument( String aDocumentId );
 
 }

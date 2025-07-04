@@ -2,7 +2,7 @@ package org.toxsoft.skf.sad.lib;
 
 import java.time.*;
 
-import org.toxsoft.core.tslib.av.opset.*;
+import org.toxsoft.core.tslib.av.utils.*;
 import org.toxsoft.core.tslib.bricks.ctx.*;
 import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
@@ -19,7 +19,7 @@ import org.toxsoft.core.tslib.utils.errors.*;
  * @author hazard157
  */
 public interface ISkSadDocument
-    extends IStridableParameterized {
+    extends IStridableParameterized, IParameterizedBatchEdit {
 
   /**
    * Opens the document for modification.
@@ -86,15 +86,6 @@ public interface ISkSadDocument
    * @return {@link LocalDateTime} - creation time
    */
   LocalDateTime creationTime();
-
-  /**
-   * Returns application-specific properties {@link #params()}.
-   * <p>
-   * TODO Goga, don't forget to add parameters editing validation!
-   *
-   * @return {@link IOpsBatchEdit} - parameters editor
-   */
-  IOpsBatchEdit paramsEditor();
 
   // ------------------------------------------------------------------------------------
   // Inline methods for convenience

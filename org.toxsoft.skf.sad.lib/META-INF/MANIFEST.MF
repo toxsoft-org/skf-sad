@@ -3,9 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: SAD (Stand-Alone Documents) SkService Library
 Bundle-SymbolicName: org.toxsoft.skf.sad.lib
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.toxsoft.skf.sad.lib,
+ org.toxsoft.skf.sad.lib.archive,
+ org.toxsoft.skf.sad.lib.impl
 Require-Bundle: org.toxsoft.core.tslib,
  org.toxsoft.core.txtproj.lib,
  org.toxsoft.uskat.core
 Bundle-Vendor: toxsoft.org
 Automatic-Module-Name: org.toxsoft.skf.sad.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-21
+TsPluginContainerVersion: 2
+TsPluginVersion:    {4,0,2025-07-04_08:00:00}
+TsPluginType:       skadmin.library
+TsPluginClassName:  org.toxsoft.skf.sad.skadmin.AdminPluginSad

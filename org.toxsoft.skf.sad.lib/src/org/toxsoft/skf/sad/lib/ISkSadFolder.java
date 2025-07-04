@@ -1,6 +1,7 @@
 package org.toxsoft.skf.sad.lib;
 
 import org.toxsoft.core.tslib.av.opset.*;
+import org.toxsoft.core.tslib.av.utils.*;
 import org.toxsoft.core.tslib.bricks.filter.*;
 import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
@@ -16,10 +17,10 @@ import org.toxsoft.skf.sad.lib.archive.*;
  * @author hazard157
  */
 public interface ISkSadFolder
-    extends IStridableParameterized {
+    extends IStridableParameterized, IParameterizedBatchEdit {
 
   /**
-   * Returns documents selected according to the specified filer.
+   * Returns documents selected according to the specified filter.
    *
    * @param aFilterParams {@link ITsCombiFilterParams} = the selection filter parameters
    * @return {@link IStridablesListEdit}&lt;{@link ISkSadDocument}&gt; - the list of documents
@@ -67,15 +68,6 @@ public interface ISkSadFolder
    * @throws TsValidationFailedRtException failed {@link ISkSadServiceValidator}
    */
   void archiveDocument( String aDocId );
-
-  /**
-   * Returns application-specific properties {@link #params()}.
-   * <p>
-   * TODO Goga, don't forget to add parameters editing validation!
-   *
-   * @return {@link IOpsBatchEdit} - parameters editor
-   */
-  IOpsBatchEdit paramsEditor();
 
   // ------------------------------------------------------------------------------------
   // Inline methods for convenience
