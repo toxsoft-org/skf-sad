@@ -103,13 +103,13 @@ class SkSadDocument
   }
 
   @Override
-  public Pair<ITheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs ) {
+  public Pair<ISkTheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs ) {
     // TODO реализовать SkSadDocument.tryOpen()
     throw new TsUnderDevelopmentRtException( "SkSadDocument.tryOpen()" );
   }
 
   @Override
-  public ITheOpenDoc openReadOnly( ITsContext aArgs ) {
+  public ISkTheOpenDoc openReadOnly( ITsContext aArgs ) {
     // TODO реализовать SkSadDocument.openReadOnly()
     throw new TsUnderDevelopmentRtException( "SkSadDocument.openReadOnly()" );
   }

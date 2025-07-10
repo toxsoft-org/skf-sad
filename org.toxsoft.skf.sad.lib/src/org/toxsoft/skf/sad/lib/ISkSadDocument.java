@@ -45,7 +45,7 @@ public interface ISkSadDocument
    *         indicator, {@link Pair#left()} will be <code>null</code> on open failure
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    */
-  Pair<ITheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs );
+  Pair<ISkTheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs );
 
   /**
    * Opens the document only for reading data, not for modification.
@@ -57,7 +57,7 @@ public interface ISkSadDocument
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    * @throws TsRuntimeException (and subclasses) on any unexpected error
    */
-  ITheOpenDoc openReadOnly( ITsContext aArgs );
+  ISkTheOpenDoc openReadOnly( ITsContext aArgs );
 
   /**
    * Returns the ID of the document used as a template to create this document.
