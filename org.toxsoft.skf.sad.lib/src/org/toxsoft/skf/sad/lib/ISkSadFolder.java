@@ -2,12 +2,12 @@ package org.toxsoft.skf.sad.lib;
 
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.utils.*;
-import org.toxsoft.core.tslib.bricks.filter.*;
 import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.sad.lib.archive.*;
+import org.toxsoft.uskat.core.api.objserv.*;
 
 /**
  * The folder of the documents.
@@ -17,15 +17,14 @@ import org.toxsoft.skf.sad.lib.archive.*;
  * @author hazard157
  */
 public interface ISkSadFolder
-    extends IStridableParameterized, IParameterizedBatchEdit {
+    extends ISkObject, IStridableParameterized, IParameterizedBatchEdit {
 
   /**
-   * Returns documents selected according to the specified filter.
+   * Returns all documents in this folder.
    *
-   * @param aFilterParams {@link ITsCombiFilterParams} = the selection filter parameters
    * @return {@link IStridablesListEdit}&lt;{@link ISkSadDocument}&gt; - the list of documents
    */
-  IStridablesListEdit<ISkSadDocument> listDocuments( ITsCombiFilterParams aFilterParams );
+  IStridablesListEdit<ISkSadDocument> listDocuments();
 
   /**
    * Searches document by ID in this folder .
@@ -71,11 +70,6 @@ public interface ISkSadFolder
 
   // ------------------------------------------------------------------------------------
   // Inline methods for convenience
-
-  @SuppressWarnings( "javadoc" )
-  default IStridablesListEdit<ISkSadDocument> listDocuments() {
-    return listDocuments( ITsCombiFilterParams.ALL );
-  }
 
   @SuppressWarnings( "javadoc" )
   default ISkSadDocument getDocument( String aDocumentId ) {

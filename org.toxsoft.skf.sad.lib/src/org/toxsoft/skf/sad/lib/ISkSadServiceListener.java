@@ -18,7 +18,7 @@ public interface ISkSadServiceListener {
    * @param aOp {@link ECrudOp} - the event type
    * @param aFolderId String - ID of changed folder of <code>null</code> for batch operations
    */
-  void onFoldersChanged( ISkSadService aSource, ECrudOp aOp, String aFolderId );
+  void onFolderChanged( ISkSadService aSource, ECrudOp aOp, String aFolderId );
 
   /**
    * Notifies about changes in documents list and document properties.
@@ -26,20 +26,19 @@ public interface ISkSadServiceListener {
    * Note: this event is <b>not</b> generated when document content changes.
    *
    * @param aSource {@link ISkSadService} - the event source
-   * @param aFolder {@link ISkSadFolder} - the source folder
+   * @param aFolderId String - the source folder ID
    * @param aOp {@link ECrudOp} - the event type
    * @param aDocumentId String - ID of changed document of <code>null</code> for batch operations
    */
-  void onDocumentsChanged( ISkSadService aSource, ISkSadFolder aFolder, ECrudOp aOp, String aDocumentId );
+  void onDocumentChanged( ISkSadService aSource, String aFolderId, ECrudOp aOp, String aDocumentId );
 
   /**
    * Notifies about changes in the specified document content.
    *
    * @param aSource {@link ISkSadService} - the event source
-   * @param aFolder {@link ISkSadFolder} - the source folder
    * @param aDocument {@link ISkSadDocument} - the changed document
    */
-  void onDocumentContentChanged( ISkSadService aSource, ISkSadFolder aFolder, ISkSadDocument aDocument );
+  void onDocumentContentChanged( ISkSadService aSource, ISkSadDocument aDocument );
 
   /**
    * Notifies about changes in the specified document state.
@@ -47,9 +46,8 @@ public interface ISkSadServiceListener {
    * TODO what is the document state
    *
    * @param aSource {@link ISkSadService} - the event source
-   * @param aFolder {@link ISkSadFolder} - the source folder
    * @param aDocument {@link ISkSadDocument} - the changed document
    */
-  void onDocumentStateChanged( ISkSadService aSource, ISkSadFolder aFolder, ISkSadDocument aDocument );
+  void onDocumentStateChanged( ISkSadService aSource, ISkSadDocument aDocument );
 
 }

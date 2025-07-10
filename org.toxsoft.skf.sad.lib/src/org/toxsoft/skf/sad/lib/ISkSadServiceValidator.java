@@ -3,6 +3,12 @@ package org.toxsoft.skf.sad.lib;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
 
+/**
+ * SAD entities editing validator.
+ *
+ * @author hazard157
+ */
+@SuppressWarnings( "javadoc" )
 public interface ISkSadServiceValidator {
 
   ValidationResult canCreateFolder( String aFolderId, IOptionSet aParams );
@@ -11,10 +17,11 @@ public interface ISkSadServiceValidator {
 
   ValidationResult canRemoveFolder( String aFolderId );
 
-  ValidationResult canCreateDocument( String aDocumentId, IOptionSet aParams );
+  ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, ISkSadDocument aTemplateDoc,
+      IOptionSet aParams );
 
-  ValidationResult canEditDocumentParams( ISkSadDocument aDocument, IOptionSet aNewParams );
+  ValidationResult canEditDocumentParams( ISkSadFolder aFolder, ISkSadDocument aDocument, IOptionSet aNewParams );
 
-  ValidationResult canRemoveDocument( String aDocumentId );
+  ValidationResult canRemoveDocument( ISkSadFolder aFolder, String aDocumentId );
 
 }

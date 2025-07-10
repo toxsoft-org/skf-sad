@@ -6,12 +6,12 @@ import org.toxsoft.uskat.core.connection.*;
 /**
  * The open document.
  * <p>
- * Note: open document must be closed either by {@link ISkTheOpenDoc#close()} or {@link ISkConnection#close()
+ * Note: open document must be closed either by {@link ITheOpenDoc#close()} or {@link ISkConnection#close()
  * conn().close()}.
  *
  * @author hazard157
  */
-public interface ISkTheOpenDoc
+public interface ITheOpenDoc
     extends ICloseable {
 
   /**

@@ -1,5 +1,0 @@
-
-??? Section?
-    SAD type
-    SAD template
-    open document -> ISkConnection

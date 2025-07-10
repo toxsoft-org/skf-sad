@@ -27,13 +27,31 @@ class SkSadDocument
    */
   public static final ISkObjectCreator<SkSadDocument> CREATOR = SkSadDocument::new;
 
+  private SkSadFolder sadFolder = null;
+
   private SkSadDocument( Skid aSkid ) {
     super( aSkid );
   }
 
   // ------------------------------------------------------------------------------------
+  // SkObject
+  //
+
+  @Override
+  protected void doPostConstruct() {
+    String folderId = extractFolderIdfFromDocumentStrid( strid() );
+    Skid folderSkid = new Skid( CLSID_SAD_FOLDER, folderId );
+    sadFolder = (SkSadFolder)coreApi().objService().get( folderSkid );
+  }
+
+  // ------------------------------------------------------------------------------------
   // ISkSadDocument
   //
+
+  @Override
+  public ISkSadFolder sadFolder() {
+    return sadFolder;
+  }
 
   @Override
   public IOptionSet params() {
@@ -67,13 +85,13 @@ class SkSadDocument
   }
 
   @Override
-  public Pair<ISkTheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs ) {
+  public Pair<ITheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs ) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public ISkTheOpenDoc openReadOnly( ITsContext aArgs ) {
+  public ITheOpenDoc openReadOnly( ITsContext aArgs ) {
     // TODO Auto-generated method stub
     return null;
   }
