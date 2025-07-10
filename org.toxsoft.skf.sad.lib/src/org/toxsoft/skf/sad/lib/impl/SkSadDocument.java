@@ -1,14 +1,18 @@
 package org.toxsoft.skf.sad.lib.impl;
 
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.sad.lib.impl.ISkSadInternalConstants.*;
 
 import java.time.*;
 
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.bricks.ctx.*;
+import org.toxsoft.core.tslib.bricks.events.msg.*;
 import org.toxsoft.core.tslib.bricks.validator.*;
+import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.*;
+import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.sad.lib.*;
 import org.toxsoft.uskat.core.api.objserv.*;
 import org.toxsoft.uskat.core.impl.*;
@@ -27,7 +31,9 @@ class SkSadDocument
    */
   public static final ISkObjectCreator<SkSadDocument> CREATOR = SkSadDocument::new;
 
-  private SkSadFolder sadFolder = null;
+  private SkSadFolder     sadFolder;
+  private SkExtServiceSad sadService;
+  private IOpsBatchEdit   paramsBatchEditor;
 
   private SkSadDocument( Skid aSkid ) {
     super( aSkid );
@@ -42,6 +48,19 @@ class SkSadDocument
     String folderId = extractFolderIdfFromDocumentStrid( strid() );
     Skid folderSkid = new Skid( CLSID_SAD_FOLDER, folderId );
     sadFolder = (SkSadFolder)coreApi().objService().get( folderSkid );
+    sadService = (SkExtServiceSad)coreApi().getService( ISkSadService.SERVICE_ID );
+    paramsBatchEditor = new ObjectParamsEditor<>( this ) {
+
+      @Override
+      protected void generateSiblingMessage() {
+        GtMessage msg = sadService.makeSiblingMessage2( MSGID_DOCUMENT_CRUD, ///
+            MSGARGID_CRUD_OP, avValobj( ECrudOp.EDIT ), ///
+            MSGARGID_FOLDER_ID, sadFolder.strid(), ///
+            MSGARGID_DOCUMENT_ID, strid() ///
+        );
+        sadService.sendMessageToSiblings( msg );
+      }
+    };
   }
 
   // ------------------------------------------------------------------------------------
@@ -80,20 +99,19 @@ class SkSadDocument
 
   @Override
   public IOpsBatchEdit paramsBatchEditor() {
-    // TODO Auto-generated method stub
-    return null;
+    return paramsBatchEditor;
   }
 
   @Override
   public Pair<ITheOpenDoc, ValidationResult> tryOpen( ITsContext aArgs ) {
-    // TODO Auto-generated method stub
-    return null;
+    // TODO реализовать SkSadDocument.tryOpen()
+    throw new TsUnderDevelopmentRtException( "SkSadDocument.tryOpen()" );
   }
 
   @Override
   public ITheOpenDoc openReadOnly( ITsContext aArgs ) {
-    // TODO Auto-generated method stub
-    return null;
+    // TODO реализовать SkSadDocument.openReadOnly()
+    throw new TsUnderDevelopmentRtException( "SkSadDocument.openReadOnly()" );
   }
 
 }

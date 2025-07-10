@@ -22,6 +22,8 @@ import org.toxsoft.uskat.core.api.objserv.*;
 public interface ISkSadDocument
     extends ISkObject, IStridableParameterized, IParameterizedBatchEdit {
 
+  // TODO getState(): OPEN, OPEN_READ_ONLY, COMMON ???
+
   /**
    * Returns the document owner folder.
    *

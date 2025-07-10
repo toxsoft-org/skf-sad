@@ -11,7 +11,7 @@ public interface IDtoArchivedDocumentInfo
 
   String templateId();
 
-  LocalDateTime archivedtype();
+  LocalDateTime archivedTime();
 
   // VERSIONS ?
 
