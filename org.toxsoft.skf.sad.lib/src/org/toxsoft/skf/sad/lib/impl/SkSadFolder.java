@@ -1,12 +1,15 @@
 package org.toxsoft.skf.sad.lib.impl;
 
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.skf.sad.lib.impl.ISkSadInternalConstants.*;
 
 import org.toxsoft.core.tslib.av.opset.*;
+import org.toxsoft.core.tslib.bricks.events.msg.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.coll.*;
+import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.sad.lib.*;
@@ -24,12 +27,34 @@ public class SkSadFolder
 
   static final ISkObjectCreator<SkSadFolder> CREATOR = SkSadFolder::new;
 
-  private final String          docClassId;
-  private final SkExtServiceSad sadService;
+  private final String docClassId;
+
+  private SkExtServiceSad sadService;
+  private IOpsBatchEdit   paramsBatchEditor;
 
   SkSadFolder( Skid aSkid ) {
     super( aSkid );
     docClassId = makeDocumentClassId( aSkid.strid() );
+  }
+
+  // ------------------------------------------------------------------------------------
+  // SkObject
+  //
+
+  @Override
+  protected void doPostConstruct() {
+    sadService = (SkExtServiceSad)coreApi().getService( ISkSadService.SERVICE_ID );
+    paramsBatchEditor = new ObjectParamsEditor<>( this ) {
+
+      @Override
+      protected void generateSiblingMessage() {
+        GtMessage msg = sadService.makeSiblingMessage2( MSGID_FOLDER_CRUD, ///
+            MSGARGID_CRUD_OP, avValobj( ECrudOp.EDIT ), ///
+            MSGARGID_FOLDER_ID, strid() ///
+        );
+        sadService.sendMessageToSiblings( msg );
+      }
+    };
   }
 
   // ------------------------------------------------------------------------------------
@@ -47,8 +72,7 @@ public class SkSadFolder
 
   @Override
   public IOpsBatchEdit paramsBatchEditor() {
-    // TODO реализовать SadFolder.paramsBatchEditor()
-    throw new TsUnderDevelopmentRtException( "SadFolder.paramsBatchEditor()" );
+    return paramsBatchEditor;
   }
 
   // ------------------------------------------------------------------------------------

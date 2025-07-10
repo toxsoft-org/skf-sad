@@ -40,13 +40,13 @@ public interface ISkSadFolder
    * Specifying an existing document as a template creates the copy with new ID.
    *
    * @param aDocId String - ID of the document to be created
-   * @param aTemplateDocId - template document iD or {@link IStridable#NONE_ID}
+   * @param aTemplateDoc {@link ISkSadDocument} - template document or <code>null</code>
    * @param aParams {@link IOptionSet} - application-specific document properties
    * @return {@link ISkSadDocument} - created document
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    * @throws TsValidationFailedRtException failed {@link ISkSadServiceValidator}
    */
-  ISkSadDocument createDocument( String aDocId, String aTemplateDocId, IOptionSet aParams );
+  ISkSadDocument createDocument( String aDocId, ISkSadDocument aTemplateDoc, IOptionSet aParams );
 
   /**
    * Permanently deletes document and it's data.
@@ -78,7 +78,7 @@ public interface ISkSadFolder
 
   @SuppressWarnings( "javadoc" )
   default ISkSadDocument createDocument( String aDocId, IOptionSet aParams ) {
-    return createDocument( aDocId, IStridable.NONE_ID, aParams );
+    return createDocument( aDocId, null, aParams );
   }
 
 }

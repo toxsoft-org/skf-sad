@@ -1,5 +1,7 @@
 package org.toxsoft.skf.sad.lib.impl;
 
+import static org.toxsoft.skf.sad.lib.impl.ISkSadInternalConstants.*;
+
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
@@ -7,13 +9,14 @@ import org.toxsoft.core.tslib.av.utils.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.uskat.core.impl.*;
+import org.toxsoft.uskat.core.impl.dto.*;
 
 /**
  * Class to be returned as {@link IParameterizedBatchEdit#paramsBatchEditor()} of the SAD entities.
  *
  * @author hazard157
  */
-class ObjectParamsEditor<T extends SkObject & IParameterized>
+abstract class ObjectParamsEditor<T extends SkObject & IParameterized>
     implements IOpsBatchEdit {
 
   private T skObj = null;
@@ -28,10 +31,10 @@ class ObjectParamsEditor<T extends SkObject & IParameterized>
   //
 
   protected void saveParams( IOptionSet aOps ) {
-    // DtoObject dto = DtoObject
-
-    // TODO реализовать ObjectParamsEditor.saveParams()
-    throw new TsUnderDevelopmentRtException( "ObjectParamsEditor.saveParams()" );
+    DtoObject dto = DtoObject.createFromSk( skObj, skObj.coreApi() );
+    dto.attrs().setValobj( ATRID_PARAMS, aOps );
+    skObj.coreApi().objService().defineObject( dto );
+    skObj.attrs().setValobj( ATRID_PARAMS, aOps );
   }
 
   // ------------------------------------------------------------------------------------
@@ -105,5 +108,11 @@ class ObjectParamsEditor<T extends SkObject & IParameterized>
     p.setAll( aOps );
     saveParams( p );
   }
+
+  // ------------------------------------------------------------------------------------
+  // To override
+  //
+
+  protected abstract void generateSiblingMessage();
 
 }

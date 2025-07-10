@@ -183,11 +183,12 @@ public class SkExtServiceSad
     }
 
     @Override
-    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, IOptionSet aParams ) {
+    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, ISkSadDocument aTemplateDoc,
+        IOptionSet aParams ) {
       TsNullArgumentRtException.checkNulls( aFolder, aDocumentId, aParams );
       ValidationResult vr = ValidationResult.SUCCESS;
       for( ISkSadServiceValidator v : validatorsList() ) {
-        vr = ValidationResult.firstNonOk( vr, v.canCreateDocument( aFolder, aDocumentId, aParams ) );
+        vr = ValidationResult.firstNonOk( vr, v.canCreateDocument( aFolder, aDocumentId, aTemplateDoc, aParams ) );
         if( vr.isError() ) {
           break;
         }
@@ -259,7 +260,11 @@ public class SkExtServiceSad
     }
 
     @Override
-    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, IOptionSet aParams ) {
+    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, ISkSadDocument aTemplateDoc,
+        IOptionSet aParams ) {
+      if( aTemplateDoc != null && !aTemplateDoc.sadFolder().id().equals( aFolder.id() ) ) {
+        return ValidationResult.error( FMT_ERR_TEMPLDOC_NOT_OF_THIS_FOLDER, aFolder.id(), aTemplateDoc.id() );
+      }
       ValidationResult vr = StridUtils.validateIdPath( aDocumentId );
       if( vr.isError() ) {
         return vr;
@@ -291,14 +296,18 @@ public class SkExtServiceSad
     }
   };
 
-  private final ClassClaimingCoreValidator claimingValidator = new ClassClaimingCoreValidator();
+  private final ClassClaimingCoreValidator    claimingValidator = new ClassClaimingCoreValidator();
+  private final SkSadArchivedDocumentsStorage archStorage;
 
   private final Svs     svs     = new Svs();
   private final Eventer eventer = new Eventer();
 
+  private AbstractDocumentOpener docOpener = null;
+
   SkExtServiceSad( IDevCoreApi aCoreApi ) {
     super( SERVICE_ID, aCoreApi );
     svs.addValidator( builtinValidator );
+    archStorage = new SkSadArchivedDocumentsStorage( this );
   }
 
   // ------------------------------------------------------------------------------------
@@ -351,6 +360,14 @@ public class SkExtServiceSad
       }
       default -> false;
     };
+  }
+
+  // ------------------------------------------------------------------------------------
+  // package API
+  //
+
+  AbstractDocumentOpener papiGetDocOpener() {
+    return docOpener;
   }
 
   // ------------------------------------------------------------------------------------
@@ -412,14 +429,12 @@ public class SkExtServiceSad
 
   @Override
   public ISkSadArchivedDocumentsStorage getDocumentsArchive() {
-    // TODO реализовать SkExtServiceSad.getDocumentsArchive()
-    throw new TsUnderDevelopmentRtException( "SkExtServiceSad.getDocumentsArchive()" );
+    return archStorage;
   }
 
   @Override
   public void setDocumentOpener( AbstractDocumentOpener aOpener ) {
-    // TODO реализовать SkExtServiceSad.setDocumentOpener()
-    throw new TsUnderDevelopmentRtException( "SkExtServiceSad.setDocumentOpener()" );
+    docOpener = aOpener;
   }
 
   @Override

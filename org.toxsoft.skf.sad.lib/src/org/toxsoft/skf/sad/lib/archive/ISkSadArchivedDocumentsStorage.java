@@ -8,4 +8,6 @@ package org.toxsoft.skf.sad.lib.archive;
  */
 public interface ISkSadArchivedDocumentsStorage {
 
+  // FIXME archived documents storage
+
 }
