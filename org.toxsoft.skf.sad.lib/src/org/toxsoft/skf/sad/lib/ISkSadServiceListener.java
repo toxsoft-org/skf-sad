@@ -43,7 +43,7 @@ public interface ISkSadServiceListener {
   /**
    * Notifies about changes in the specified document state.
    * <p>
-   * TODO what is the document state
+   * TODO what is the document state: OPEN, OPEN_READ_ONLY, COMMON ???
    *
    * @param aSource {@link ISkSadService} - the event source
    * @param aDocument {@link ISkSadDocument} - the changed document

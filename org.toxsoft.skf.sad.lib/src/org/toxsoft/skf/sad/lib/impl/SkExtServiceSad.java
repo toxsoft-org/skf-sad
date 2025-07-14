@@ -2,15 +2,20 @@ package org.toxsoft.skf.sad.lib.impl;
 
 import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.utils.TsLibUtils.*;
+import static org.toxsoft.skf.sad.lib.ISkSadServiceHardConstants.*;
 import static org.toxsoft.skf.sad.lib.impl.ISkSadInternalConstants.*;
 import static org.toxsoft.skf.sad.lib.l10n.ISkSadLibSharedResources.*;
 import static org.toxsoft.uskat.core.ISkHardConstants.*;
+
+import java.io.*;
+import java.nio.file.*;
 
 import org.toxsoft.core.tslib.av.opset.*;
 import org.toxsoft.core.tslib.av.opset.impl.*;
 import org.toxsoft.core.tslib.bricks.ctx.*;
 import org.toxsoft.core.tslib.bricks.events.*;
 import org.toxsoft.core.tslib.bricks.events.msg.*;
+import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
 import org.toxsoft.core.tslib.bricks.strid.impl.*;
@@ -21,11 +26,14 @@ import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
 import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
+import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
 import org.toxsoft.core.tslib.utils.errors.*;
+import org.toxsoft.core.tslib.utils.txtmatch.*;
 import org.toxsoft.skf.sad.lib.*;
 import org.toxsoft.skf.sad.lib.archive.*;
 import org.toxsoft.uskat.core.*;
+import org.toxsoft.uskat.core.api.sysdescr.dto.*;
 import org.toxsoft.uskat.core.devapi.*;
 import org.toxsoft.uskat.core.impl.*;
 import org.toxsoft.uskat.core.impl.dto.*;
@@ -38,10 +46,6 @@ import org.toxsoft.uskat.core.impl.dto.*;
 public class SkExtServiceSad
     extends AbstractSkService
     implements ISkSadService {
-
-  /**
-   * FIXME generate messages for siblings and listen them
-   */
 
   /**
    * Service creator singleton.
@@ -170,6 +174,19 @@ public class SkExtServiceSad
     }
 
     @Override
+    public ValidationResult canSetFolderNameAndDescription( ISkSadFolder aFolder, String aName, String aDescription ) {
+      TsNullArgumentRtException.checkNulls( aFolder, aName, aDescription );
+      ValidationResult vr = ValidationResult.SUCCESS;
+      for( ISkSadServiceValidator v : validatorsList() ) {
+        vr = ValidationResult.firstNonOk( vr, v.canSetFolderNameAndDescription( aFolder, aName, aDescription ) );
+        if( vr.isError() ) {
+          break;
+        }
+      }
+      return vr;
+    }
+
+    @Override
     public ValidationResult canRemoveFolder( String aFolderId ) {
       TsNullArgumentRtException.checkNull( aFolderId );
       ValidationResult vr = ValidationResult.SUCCESS;
@@ -183,12 +200,12 @@ public class SkExtServiceSad
     }
 
     @Override
-    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, ISkSadDocument aTemplateDoc,
+    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, String aTemplateDocId,
         IOptionSet aParams ) {
-      TsNullArgumentRtException.checkNulls( aFolder, aDocumentId, aParams );
+      TsNullArgumentRtException.checkNulls( aFolder, aDocumentId, aTemplateDocId, aParams );
       ValidationResult vr = ValidationResult.SUCCESS;
       for( ISkSadServiceValidator v : validatorsList() ) {
-        vr = ValidationResult.firstNonOk( vr, v.canCreateDocument( aFolder, aDocumentId, aTemplateDoc, aParams ) );
+        vr = ValidationResult.firstNonOk( vr, v.canCreateDocument( aFolder, aDocumentId, aTemplateDocId, aParams ) );
         if( vr.isError() ) {
           break;
         }
@@ -203,6 +220,21 @@ public class SkExtServiceSad
       ValidationResult vr = ValidationResult.SUCCESS;
       for( ISkSadServiceValidator v : validatorsList() ) {
         vr = ValidationResult.firstNonOk( vr, v.canEditDocumentParams( aFolder, aDocument, aNewParams ) );
+        if( vr.isError() ) {
+          break;
+        }
+      }
+      return vr;
+    }
+
+    @Override
+    public ValidationResult canSetDocumentNameAndDescription( ISkSadFolder aFolder, ISkSadDocument aDocument,
+        String aName, String aDescription ) {
+      TsNullArgumentRtException.checkNulls( aFolder, aDocument, aName, aDescription );
+      ValidationResult vr = ValidationResult.SUCCESS;
+      for( ISkSadServiceValidator v : validatorsList() ) {
+        vr = ValidationResult.firstNonOk( vr,
+            v.canSetDocumentNameAndDescription( aFolder, aDocument, aName, aDescription ) );
         if( vr.isError() ) {
           break;
         }
@@ -236,6 +268,9 @@ public class SkExtServiceSad
       if( vr.isError() ) {
         return vr;
       }
+      if( aFolderId.equals( IStridable.NONE_ID ) ) {
+        return ValidationResult.error( FMT_ERR_CANT_CREATE_NONE_FOLDER, IStridable.NONE_ID );
+      }
       Skid skid = new Skid( CLSID_SAD_FOLDER, aFolderId );
       if( objServ().find( skid ) != null ) {
         return ValidationResult.error( FMT_ERR_FOLDER_ID_ALREADY_EXISTS, aFolderId );
@@ -251,28 +286,45 @@ public class SkExtServiceSad
     }
 
     @Override
+    public ValidationResult canSetFolderNameAndDescription( ISkSadFolder aFolder, String aName, String aDescription ) {
+      return NameStringValidator.VALIDATOR.validate( aName );
+    }
+
+    @Override
     public ValidationResult canRemoveFolder( String aFolderId ) {
       Skid skid = new Skid( CLSID_SAD_FOLDER, aFolderId );
-      if( objServ().find( skid ) == null ) {
+      ISkSadFolder folder = objServ().find( skid );
+      if( folder == null ) {
         return ValidationResult.warn( FMT_WARN_FOLDER_ID_NOT_EXISTS, aFolderId );
+      }
+      int docsCount = folder.listDocuments().size();
+      if( docsCount > 0 ) {
+        return ValidationResult.error( FMT_ERR_CANT_REMOVE_FOLDER_WITH_DOCS, aFolderId, Integer.valueOf( docsCount ) );
       }
       return ValidationResult.SUCCESS;
     }
 
     @Override
-    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, ISkSadDocument aTemplateDoc,
+    public ValidationResult canCreateDocument( ISkSadFolder aFolder, String aDocumentId, String aTemplateDocId,
         IOptionSet aParams ) {
-      if( aTemplateDoc != null && !aTemplateDoc.sadFolder().id().equals( aFolder.id() ) ) {
-        return ValidationResult.error( FMT_ERR_TEMPLDOC_NOT_OF_THIS_FOLDER, aFolder.id(), aTemplateDoc.id() );
-      }
       ValidationResult vr = StridUtils.validateIdPath( aDocumentId );
       if( vr.isError() ) {
         return vr;
+      }
+      if( aDocumentId.equals( IStridable.NONE_ID ) ) {
+        return ValidationResult.error( FMT_ERR_CANT_CREATE_NONE_DOCUMENT, IStridable.NONE_ID );
       }
       String docClassId = makeDocumentClassId( aFolder.id() );
       Skid skid = new Skid( docClassId, aDocumentId );
       if( objServ().find( skid ) != null ) {
         return ValidationResult.error( FMT_ERR_DOCUMENT_ID_ALREADY_EXISTS, aFolder.id(), aDocumentId );
+      }
+      ISkSadDocument templateDoc = null;
+      if( !aTemplateDocId.equals( IStridable.NONE_ID ) ) {
+        templateDoc = aFolder.findDocument( aTemplateDocId );
+        if( templateDoc == null ) {
+          return ValidationResult.error( FMT_ERR_TEMPLATE_DOC_NOT_FOUND, aFolder.id(), aTemplateDocId );
+        }
       }
       String name = aParams.getStr( AID_NAME, EMPTY_STRING );
       vr = ValidationResult.firstNonOk( vr, NameStringValidator.VALIDATOR.validate( name ) );
@@ -283,6 +335,12 @@ public class SkExtServiceSad
     public ValidationResult canEditDocumentParams( ISkSadFolder aFolder, ISkSadDocument aDocument,
         IOptionSet aNewParams ) {
       return ValidationResult.SUCCESS;
+    }
+
+    @Override
+    public ValidationResult canSetDocumentNameAndDescription( ISkSadFolder aFolder, ISkSadDocument aDocument,
+        String aName, String aDescription ) {
+      return NameStringValidator.VALIDATOR.validate( aName );
     }
 
     @Override
@@ -299,15 +357,16 @@ public class SkExtServiceSad
   private final ClassClaimingCoreValidator    claimingValidator = new ClassClaimingCoreValidator();
   private final SkSadArchivedDocumentsStorage archStorage;
 
+  private final File tmpDir;
+
   private final Svs     svs     = new Svs();
   private final Eventer eventer = new Eventer();
-
-  private AbstractDocumentOpener docOpener = null;
 
   SkExtServiceSad( IDevCoreApi aCoreApi ) {
     super( SERVICE_ID, aCoreApi );
     svs.addValidator( builtinValidator );
     archStorage = new SkSadArchivedDocumentsStorage( this );
+    tmpDir = createTemporaryDirectory();
   }
 
   // ------------------------------------------------------------------------------------
@@ -323,6 +382,9 @@ public class SkExtServiceSad
         objServ().registerObjectCreator( b.classId(), b.objCreator() );
       }
     }
+    // register creator of document class and all subclasses
+    TextMatcher rule = new TextMatcher( ETextMatchMode.STARTS, CLSID_SAD_DOCUMENT, true );
+    objServ().registerObjectCreator( rule, SkSadDocument.CREATOR );
     // claim on classes
     sysdescr().svs().addValidator( claimingValidator );
     objServ().svs().addValidator( claimingValidator );
@@ -363,11 +425,61 @@ public class SkExtServiceSad
   }
 
   // ------------------------------------------------------------------------------------
+  // implementation
+  //
+
+  private File createTemporaryDirectory() {
+    File f;
+    try {
+      f = Files.createTempDirectory( SAD_CONTENT_LOCAL_STORAGE_TMP_DIR_PREFIX ).toFile();
+      f.deleteOnExit();
+      return f;
+    }
+    catch( IOException ex ) {
+      logger().error( ex );
+      throw new TsIoRtException( ex );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------
   // package API
   //
 
-  AbstractDocumentOpener papiGetDocOpener() {
-    return docOpener;
+  File papiGetFileNameForClob( Gwid aClob ) {
+    TsInternalErrorRtException.checkTrue( aClob.isAbstract() );
+    TsInternalErrorRtException.checkTrue( aClob.kind() != EGwidKind.GW_CLOB );
+    String name = aClob.skid().toString() + "---" + aClob.propId(); //$NON-NLS-1$
+    return new File( tmpDir, name + '.' + SAD_CONTENT_LOCAL_STORAGE_FILE_EXTENSION );
+  }
+
+  File papiGetTemporaryFileNameForClob( Gwid aClob ) {
+    TsInternalErrorRtException.checkTrue( aClob.isAbstract() );
+    TsInternalErrorRtException.checkTrue( aClob.kind() != EGwidKind.GW_CLOB );
+    String name = "tmp---" + aClob.skid().toString() + "---" + aClob.propId(); //$NON-NLS-1$ //$NON-NLS-2$
+    return new File( tmpDir, name + '.' + SAD_CONTENT_LOCAL_STORAGE_FILE_EXTENSION );
+
+  }
+
+  void pauseCoreValidationAndEvents() {
+    sysdescr().svs().pauseValidator( claimingValidator );
+    objServ().svs().pauseValidator( claimingValidator );
+    linkService().svs().pauseValidator( claimingValidator );
+    clobService().svs().pauseValidator( claimingValidator );
+    sysdescr().eventer().pauseFiring();
+    objServ().eventer().pauseFiring();
+    linkService().eventer().pauseFiring();
+    clobService().eventer().pauseFiring();
+  }
+
+  void resumeCoreValidationAndEvents() {
+    sysdescr().svs().resumeValidator( claimingValidator );
+    objServ().svs().resumeValidator( claimingValidator );
+    linkService().svs().resumeValidator( claimingValidator );
+    clobService().svs().resumeValidator( claimingValidator );
+    sysdescr().eventer().resumeFiring( true );
+    objServ().eventer().resumeFiring( true );
+    linkService().eventer().resumeFiring( true );
+    clobService().eventer().resumeFiring( true );
   }
 
   // ------------------------------------------------------------------------------------
@@ -398,19 +510,30 @@ public class SkExtServiceSad
         params.put( pid, aParams.getValue( pid ) );
       }
     }
-    // create folder object
-    Skid skid = new Skid( CLSID_SAD_FOLDER, aFolderId );
-    DtoObject dto = new DtoObject( skid );
-    dto.attrs().setStr( AID_NAME, name );
-    dto.attrs().setStr( AID_DESCRIPTION, description );
-    dto.attrs().setValobj( ATRID_PARAMS, params );
-    ISkSadFolder folder = objServ().defineObject( dto );
-    // inform siblings
-    GtMessage msg = makeSiblingMessage2( MSGID_FOLDER_CRUD, ///
-        MSGARGID_CRUD_OP, avValobj( ECrudOp.CREATE ), ///
-        MSGARGID_FOLDER_ID, folder.strid() ///
-    );
-    sendMessageToSiblings( msg );
+    ISkSadFolder folder;
+    pauseCoreValidationAndEvents();
+    try {
+      // create item class
+      String classId = makeDocumentClassId( aFolderId );
+      IDtoClassInfo docClassInfo = DtoClassInfo.create( classId, CLSID_SAD_DOCUMENT, aParams );
+      sysdescr().defineClass( docClassInfo );
+      // create folder object
+      Skid skid = new Skid( CLSID_SAD_FOLDER, aFolderId );
+      DtoObject dto = new DtoObject( skid );
+      dto.attrs().setStr( AID_NAME, name );
+      dto.attrs().setStr( AID_DESCRIPTION, description );
+      dto.attrs().setValobj( ATRID_PARAMS, params );
+      folder = objServ().defineObject( dto );
+      // inform siblings
+      GtMessage msg = makeSiblingMessage2( MSGID_FOLDER_CRUD, ///
+          MSGARGID_CRUD_OP, avValobj( ECrudOp.CREATE ), ///
+          MSGARGID_FOLDER_ID, folder.strid() ///
+      );
+      sendMessageToSiblings( msg );
+    }
+    finally {
+      resumeCoreValidationAndEvents();
+    }
     return folder;
   }
 
@@ -418,23 +541,28 @@ public class SkExtServiceSad
   public void removeFolder( String aFolderId ) {
     TsValidationFailedRtException.checkError( svs.validator().canRemoveFolder( aFolderId ) );
     Skid skid = new Skid( CLSID_SAD_FOLDER, aFolderId );
-    objServ().removeObject( skid );
-    // inform siblings
-    GtMessage msg = makeSiblingMessage2( MSGID_FOLDER_CRUD, ///
-        MSGARGID_CRUD_OP, avValobj( ECrudOp.REMOVE ), ///
-        MSGARGID_FOLDER_ID, aFolderId ///
-    );
-    sendMessageToSiblings( msg );
+    pauseCoreValidationAndEvents();
+    try {
+      // remove documents class
+      String classId = makeDocumentClassId( aFolderId );
+      sysdescr().removeClass( classId );
+      // remove folder object
+      objServ().removeObject( skid );
+      // inform siblings
+      GtMessage msg = makeSiblingMessage2( MSGID_FOLDER_CRUD, ///
+          MSGARGID_CRUD_OP, avValobj( ECrudOp.REMOVE ), ///
+          MSGARGID_FOLDER_ID, aFolderId ///
+      );
+      sendMessageToSiblings( msg );
+    }
+    finally {
+      resumeCoreValidationAndEvents();
+    }
   }
 
   @Override
   public ISkSadArchivedDocumentsStorage getDocumentsArchive() {
     return archStorage;
-  }
-
-  @Override
-  public void setDocumentOpener( AbstractDocumentOpener aOpener ) {
-    docOpener = aOpener;
   }
 
   @Override

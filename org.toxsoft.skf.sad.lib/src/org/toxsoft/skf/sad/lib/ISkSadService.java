@@ -7,11 +7,9 @@ import org.toxsoft.core.tslib.bricks.validator.*;
 import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.sad.lib.archive.*;
-import org.toxsoft.skf.sad.lib.impl.*;
 import org.toxsoft.uskat.core.*;
 import org.toxsoft.uskat.core.api.*;
 import org.toxsoft.uskat.core.api.objserv.*;
-import org.toxsoft.uskat.core.connection.*;
 
 /**
  * SAD (Stand-Alone Documents) service.
@@ -28,8 +26,6 @@ import org.toxsoft.uskat.core.connection.*;
  */
 public interface ISkSadService
     extends ISkService {
-
-  // TODO save/load doc content to file (or buffer, or any other memento)
 
   /**
    * Service identifier.
@@ -88,17 +84,6 @@ public interface ISkSadService
    * @return {@link ISkSadArchivedDocumentsStorage} - the documents archive
    */
   ISkSadArchivedDocumentsStorage getDocumentsArchive();
-
-  /**
-   * Sets the document opening routine.
-   * <p>
-   * In the different environments opening the documents, namely the {@link ISkConnection} creation, might require
-   * additional action. For example in GUI environments M5 support must be initialized. Defining the opener allows to
-   * determine such additional actions.
-   *
-   * @param aOpener {@link AbstractDocumentOpener} - the document opening routine
-   */
-  void setDocumentOpener( AbstractDocumentOpener aOpener );
 
   // ------------------------------------------------------------------------------------
   // Service support

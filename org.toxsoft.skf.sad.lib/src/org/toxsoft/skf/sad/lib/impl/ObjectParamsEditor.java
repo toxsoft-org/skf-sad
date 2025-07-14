@@ -1,6 +1,8 @@
 package org.toxsoft.skf.sad.lib.impl;
 
-import static org.toxsoft.skf.sad.lib.impl.ISkSadInternalConstants.*;
+import static org.toxsoft.skf.sad.lib.ISkSadServiceHardConstants.*;
+
+import java.time.*;
 
 import org.toxsoft.core.tslib.av.*;
 import org.toxsoft.core.tslib.av.opset.*;
@@ -21,9 +23,12 @@ abstract class ObjectParamsEditor<T extends SkObject & IParameterized>
 
   private T skObj = null;
 
-  public ObjectParamsEditor( T aObj ) {
-    TsNullArgumentRtException.checkNull( aObj );
+  private final SkExtServiceSad sadService;
+
+  public ObjectParamsEditor( T aObj, SkExtServiceSad aSadService ) {
+    TsNullArgumentRtException.checkNulls( aObj, aSadService );
     skObj = aObj;
+    sadService = aSadService;
   }
 
   // ------------------------------------------------------------------------------------
@@ -31,10 +36,19 @@ abstract class ObjectParamsEditor<T extends SkObject & IParameterized>
   //
 
   protected void saveParams( IOptionSet aOps ) {
-    DtoObject dto = DtoObject.createFromSk( skObj, skObj.coreApi() );
-    dto.attrs().setValobj( ATRID_PARAMS, aOps );
-    skObj.coreApi().objService().defineObject( dto );
-    skObj.attrs().setValobj( ATRID_PARAMS, aOps );
+    sadService.pauseCoreValidationAndEvents();
+    try {
+      DtoObject dto = DtoObject.createFromSk( skObj, skObj.coreApi() );
+      dto.attrs().setValobj( ATRID_PARAMS, aOps );
+      if( dto.attrs().hasKey( ATRID_ATTRS_MODIFICATION_TIME ) ) {
+        dto.attrs().setValobj( ATRID_ATTRS_MODIFICATION_TIME, LocalDateTime.now( ZoneId.of( "UTC" ) ) ); //$NON-NLS-1$
+      }
+      skObj.coreApi().objService().defineObject( dto );
+      skObj.attrs().setValobj( ATRID_PARAMS, aOps );
+    }
+    finally {
+      sadService.resumeCoreValidationAndEvents();
+    }
   }
 
   // ------------------------------------------------------------------------------------

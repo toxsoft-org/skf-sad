@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_cKROgF1tEfCst9wXDAPE5Q"/>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_cKROgF1tEfCst9wXDAPE5Q">
+  <imports xsi:type="commands:Category" xmi:id="_fCXKIF8nEfC6OrgOMMJeQA" elementId="org.toxsoft.mws.cmdcategory.global"/>
+  <imports xsi:type="commands:Command" xmi:id="_f7fxkF8nEfC6OrgOMMJeQA" elementId="org.toxsoft.mws.cmd.switch_persp">
+    <parameters xmi:id="_g3eRoF8nEfC6OrgOMMJeQA" elementId="org.toxsoft.mws.cmd.switch_persp.arg.perspId" name="org.toxsoft.mws.cmd.switch_persp.arg.perspId"/>
+    <parameters xmi:id="_hrhkwF8nEfC6OrgOMMJeQA" elementId="org.toxsoft.mws.cmd.switch_persp.arg.partId" name="org.toxsoft.mws.cmd.switch_persp.arg.partId" optional="false"/>
+  </imports>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_klxvYF8nEfC6OrgOMMJeQA" featurename="addons" parentElementId="org.toxsoft.mws.app.main">
+    <elements xsi:type="application:Addon" xmi:id="_modY0F8nEfC6OrgOMMJeQA" elementId="org.toxsoft.skf.sad.skide.addon.0" contributionURI="bundleclass://org.toxsoft.skf.sad.skide/org.toxsoft.skf.sad.skide.e4.addons.AddonSkfSadSkide"/>
+  </fragments>
+</fragment:ModelFragments>

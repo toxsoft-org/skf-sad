@@ -40,13 +40,13 @@ public interface ISkSadFolder
    * Specifying an existing document as a template creates the copy with new ID.
    *
    * @param aDocId String - ID of the document to be created
-   * @param aTemplateDoc {@link ISkSadDocument} - template document or <code>null</code>
+   * @param aTemplateDocId String - template document ID or {@link IStridable#NONE_ID}
    * @param aParams {@link IOptionSet} - application-specific document properties
    * @return {@link ISkSadDocument} - created document
    * @throws TsNullArgumentRtException any argument = <code>null</code>
    * @throws TsValidationFailedRtException failed {@link ISkSadServiceValidator}
    */
-  ISkSadDocument createDocument( String aDocId, ISkSadDocument aTemplateDoc, IOptionSet aParams );
+  ISkSadDocument createDocument( String aDocId, String aTemplateDocId, IOptionSet aParams );
 
   /**
    * Permanently deletes document and it's data.
@@ -68,12 +68,21 @@ public interface ISkSadFolder
    */
   void archiveDocument( String aDocId );
 
+  /**
+   * Sets name {@link #nmName()} and {@link #description()}.
+   *
+   * @param aName String - the name
+   * @param aDescription String - the description
+   * @throws TsNullArgumentRtException any argument = <code>null</code>
+   */
+  void setNameAndDescription( String aName, String aDescription );
+
   // ------------------------------------------------------------------------------------
   // Inline methods for convenience
 
   @SuppressWarnings( "javadoc" )
   default ISkSadDocument getDocument( String aDocumentId ) {
-    return TsItemNotFoundRtException.checkNoNull( findDocument( aDocumentId ) );
+    return TsItemNotFoundRtException.checkNull( findDocument( aDocumentId ) );
   }
 
   @SuppressWarnings( "javadoc" )
