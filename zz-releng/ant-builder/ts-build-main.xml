@@ -17,6 +17,7 @@
   <!-- TODO: -->
   <target name="build-lib-jar" depends="clean" description="Сборка общих плагинов">
     <ant dir="../../org.toxsoft.skf.sad.lib" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
+    <ant dir="../../org.toxsoft.skf.sad.skadmin" antfile="${ts-scripts-dir}/ts-build-lib.xml" target="build-lib-jar" />
   </target>
 
   <!-- ЦЕЛЬ: сборка plugin-ов -->
@@ -27,7 +28,10 @@
                        exportSource="true"
                        exportSourceBundle="false"
                        exportType="directory"
-                       plugins="org.toxsoft.skf.sad.lib"
+                       plugins="org.toxsoft.skf.sad.lib,
+                                org.toxsoft.skf.sad.gui,
+                                org.toxsoft.skf.sad.skadmin,
+                                org.toxsoft.skf.sad.skide"
                        useworkspacecompiledclasses="true"
                        useJARFormat="true" />
   </target>

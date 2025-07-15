@@ -6,8 +6,14 @@
       </description>
    </category-def>
    <bundle id="org.toxsoft.skf.sad.lib"/>
+   <bundle id="org.toxsoft.skf.sad.gui"/>
+   <bundle id="org.toxsoft.skf.sad.skadmin"/>
+   <bundle id="org.toxsoft.skf.sad.skide"/>
 
    <!-- sources -->
    <bundle id="org.toxsoft.skf.sad.lib.source"/>
+   <bundle id="org.toxsoft.skf.sad.gui.source"/>
+   <bundle id="org.toxsoft.skf.sad.skadmin.source"/>
+   <bundle id="org.toxsoft.skf.sad.skide.source"/>
 
 </site>

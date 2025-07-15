@@ -565,6 +565,9 @@
   </profiles>
   <modules>
     <module>org.toxsoft.skf.sad.lib</module>
+    <module>org.toxsoft.skf.sad.gui</module>
+    <module>org.toxsoft.skf.sad.skadmin</module>
+    <module>org.toxsoft.skf.sad.skide</module>
 
     <module>zz-releng/p2.main</module>
     <module>zz-releng/ant.main</module>
