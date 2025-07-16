@@ -87,7 +87,7 @@ public interface ISkSadFolder
 
   @SuppressWarnings( "javadoc" )
   default ISkSadDocument createDocument( String aDocId, IOptionSet aParams ) {
-    return createDocument( aDocId, null, aParams );
+    return createDocument( aDocId, IStridable.NONE_ID, aParams );
   }
 
 }
