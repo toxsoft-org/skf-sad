@@ -28,7 +28,9 @@ import org.toxsoft.core.tslib.coll.primtypes.*;
 import org.toxsoft.core.tslib.coll.primtypes.impl.*;
 import org.toxsoft.core.tslib.gw.gwid.*;
 import org.toxsoft.core.tslib.gw.skid.*;
+import org.toxsoft.core.tslib.utils.*;
 import org.toxsoft.core.tslib.utils.errors.*;
+import org.toxsoft.core.tslib.utils.files.*;
 import org.toxsoft.core.tslib.utils.txtmatch.*;
 import org.toxsoft.skf.sad.lib.*;
 import org.toxsoft.skf.sad.lib.archive.*;
@@ -394,7 +396,8 @@ public class SkExtServiceSad
 
   @Override
   protected void doClose() {
-    // nop
+    // remove temporary directory on exit
+    TsFileUtils.deleteDirectory( tmpDir, ILongOpProgressCallback.NONE );
   }
 
   @Override
