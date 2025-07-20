@@ -87,7 +87,7 @@ class SkSadDocument
   //
 
   @Override
-  public ISkSadFolder sadFolder() {
+  public SkSadFolder sadFolder() {
     return sadFolder;
   }
 
@@ -164,7 +164,7 @@ class SkSadDocument
     TsIllegalArgumentRtException.checkFalse( args.hasKey( REFDEF_THREAD_EXECUTOR.refKey() ) );
     try {
       aConn.open( args );
-      TheOpenDoc openDoc = new TheOpenDoc( aConn, this, sadService, false );
+      TheOpenDoc openDoc = new TheOpenDoc( aConn, this, false );
       return new Pair<>( openDoc, ValidationResult.SUCCESS );
     }
     catch( Exception ex ) {
@@ -192,7 +192,7 @@ class SkSadDocument
     TsIllegalArgumentRtException.checkFalse( args.hasKey( REFDEF_THREAD_EXECUTOR.refKey() ) );
     try {
       aConn.open( args );
-      TheOpenDoc openDoc = new TheOpenDoc( aConn, this, sadService, false );
+      TheOpenDoc openDoc = new TheOpenDoc( aConn, this, false );
       return new Pair<>( openDoc, ValidationResult.SUCCESS );
     }
     catch( Exception ex ) {

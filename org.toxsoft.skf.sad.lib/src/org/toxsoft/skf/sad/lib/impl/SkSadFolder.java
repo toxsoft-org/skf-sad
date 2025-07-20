@@ -68,7 +68,15 @@ public class SkSadFolder
   }
 
   // ------------------------------------------------------------------------------------
-  // IParameterizedBatchEdit
+  // package API
+  //
+
+  SkExtServiceSad sadService() {
+    return sadService;
+  }
+
+  // ------------------------------------------------------------------------------------
+  // IParameterized
   //
 
   @Override

@@ -9,6 +9,11 @@ import org.toxsoft.core.tslib.utils.errors.*;
 import org.toxsoft.skf.sad.lib.*;
 import org.toxsoft.uskat.core.connection.*;
 
+/**
+ * {@link ISkTheOpenDoc} implementation.
+ *
+ * @author hazard157
+ */
 class TheOpenDoc
     implements ISkTheOpenDoc {
 
@@ -24,9 +29,16 @@ class TheOpenDoc
 
   private ISkConnection skConn = null;
 
-  TheOpenDoc( ISkConnection aConn, SkSadDocument aSad, SkExtServiceSad aService, boolean aReadOnly ) {
+  /**
+   * Constructor.
+   *
+   * @param aConn {@link ISkConnection} - open connection
+   * @param aSad {@link SkSadDocument} - the document
+   * @param aReadOnly boolean - read-only connection flag
+   */
+  TheOpenDoc( ISkConnection aConn, SkSadDocument aSad, boolean aReadOnly ) {
     sadDocument = aSad;
-    sadService = aService;
+    sadService = sadDocument.sadFolder().sadService();
     readOnly = aReadOnly;
     skConn = aConn;
     skConn.addConnectionListener( connectionListener );
