@@ -107,7 +107,7 @@ public interface ISkSadService
 
   @SuppressWarnings( "javadoc" )
   default ISkSadFolder getFolder( String aFolderId ) {
-    return TsItemNotFoundRtException.checkNoNull( findFolder( aFolderId ) );
+    return TsItemNotFoundRtException.checkNull( findFolder( aFolderId ) );
   }
 
 }
