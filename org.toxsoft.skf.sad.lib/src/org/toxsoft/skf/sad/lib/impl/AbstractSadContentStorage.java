@@ -18,7 +18,7 @@ abstract class AbstractSadContentStorage {
   }
 
   /**
-   * Gets SAD document content from the server and writes itto the local file.
+   * Gets SAD document content from the server and writes it to the local file.
    *
    * @param aSad {@link ISkSadDocument} - the document
    * @param aLocalFile {@link File} - local file to write document content

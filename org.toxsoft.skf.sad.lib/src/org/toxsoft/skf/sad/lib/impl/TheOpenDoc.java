@@ -59,6 +59,7 @@ class TheOpenDoc
         sadService.pauseCoreValidationAndEvents();
         sadDocument.uploadSadContentFromTheFile( file );
         file.delete();
+        skConn = null;
       }
       catch( Exception ex ) {
         // need more precise error handling
@@ -73,7 +74,6 @@ class TheOpenDoc
 
     // TODO inform on document state change
 
-    skConn = null;
   }
 
   // ------------------------------------------------------------------------------------

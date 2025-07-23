@@ -46,7 +46,7 @@ interface ISkSadInternalConstants {
    */
   IList<BuiltinClassDef> BUILTIN_CLASS_DEFS = new ElemArrayList<>( ///
       new BuiltinClassDef( CLSINF_SAD_FOLDER, SkSadFolder.CREATOR ), ///
-      new BuiltinClassDef( CLSINF_SAD_DOCUMENT, null ) // creater will be registered for document and all subclasses
+      new BuiltinClassDef( CLSINF_SAD_DOCUMENT, null ) // creator will be registered for document and all subclasses
   );
 
   // ------------------------------------------------------------------------------------
