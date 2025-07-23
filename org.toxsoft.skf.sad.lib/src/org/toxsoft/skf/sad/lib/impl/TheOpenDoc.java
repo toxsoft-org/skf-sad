@@ -55,7 +55,7 @@ class TheOpenDoc
     if( !readOnly ) {
       try {
         Gwid clobGwid = Gwid.createClob( sadDocument.skid(), CLBID_CONTENT );
-        File file = sadService.papiGetTemporaryFileNameForClob( clobGwid );
+        File file = sadService.papiGetFileNameForClob( clobGwid );
         sadService.pauseCoreValidationAndEvents();
         sadDocument.uploadSadContentFromTheFile( file );
         file.delete();
