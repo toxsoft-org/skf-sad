@@ -1,10 +1,12 @@
 package org.toxsoft.skf.sad.skide.main;
 
 import static org.toxsoft.core.tsgui.bricks.actions.ITsStdActionDefs.*;
+import static org.toxsoft.core.tslib.av.impl.AvUtils.*;
 import static org.toxsoft.core.tslib.av.metainfo.IAvMetaConstants.*;
 import static org.toxsoft.skf.sad.gui.ISkfSadGuiConstants.*;
 import static org.toxsoft.skf.sad.skide.l10n.ISkfSadSkideSharedResources.*;
 import static org.toxsoft.skide.core.ISkideCoreConstants.*;
+import static org.toxsoft.skide.core.api.ISkidePluginHardConstants.*;
 import static org.toxsoft.skide.core.api.ucateg.ISkideUnitCategoryConstants.*;
 
 import org.toxsoft.core.tsgui.bricks.ctx.*;
@@ -19,7 +21,7 @@ import org.toxsoft.skide.core.api.tasks.*;
  *
  * @author hazard157
  */
-public class SkideUnitSkfSadOne
+public class SkideUnitSadManager
     extends AbstractSkideUnit {
 
   /**
@@ -27,11 +29,12 @@ public class SkideUnitSkfSadOne
    */
   public static final String UNIT_ID = SKIDE_FULL_ID + ".unit.skf_sad.one"; //$NON-NLS-1$
 
-  SkideUnitSkfSadOne( ITsGuiContext aContext, AbstractSkidePlugin aCreator ) {
+  SkideUnitSadManager( ITsGuiContext aContext, AbstractSkidePlugin aCreator ) {
     super( UNIT_ID, OptionSetUtils.createOpSet( //
-        TSID_NAME, STR_UNIT_SKF_SAD_ONE, //
-        TSID_DESCRIPTION, STR_UNIT_SKF_SAD_ONE_D, //
-        OPDEF_SKIDE_UNIT_CATEGORY, UCATEGID_APP_SPECIFIC, //
+        TSID_NAME, STR_UNIT_SAD_MANAGER, //
+        TSID_DESCRIPTION, STR_UNIT_SAD_MANAGER_D, //
+        OPDEF_SKIDE_UNIT_CATEGORY, UCATEGID_SYSDESCR, //
+        OPDEF_SKIDE_UNIT_SEQ_NO, avInt( 450 ), //
         TSID_ICON_ID, ICONID_SKF_SAD //
     ), aContext, aCreator );
     unitActions().add( ACDEF_ABOUT );

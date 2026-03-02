@@ -1,0 +1,13 @@
+--- check valid format when importing documents
+--- add view to browse SAD document as alist of sections
+--- sfv.tool: 
+    --- create PanelSfvContentEditor to edit ISfvCContent (left list of section rightview/edit pane)
+    --- add export/import whole content from/to file
+    --- add export/import subset of sections from/to file
+    --- add validation of edited section
+    --- add helper method to validate file content in backgroud
+    --- panel settings: font_info, is_imported_filecheked
+--- reorganize SAD manage right pane:
+    --- left sash: top list - SAD skf-section, bottom list: SADs in section
+    --- right sash: PanelSfvContentEditor of the selected SAD 
+    --- add "Save changes"

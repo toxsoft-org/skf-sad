@@ -15,6 +15,7 @@ import org.toxsoft.core.tslib.bricks.events.msg.*;
 import org.toxsoft.core.tslib.bricks.strid.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.*;
 import org.toxsoft.core.tslib.bricks.strid.coll.impl.*;
+import org.toxsoft.core.tslib.bricks.strid.impl.*;
 import org.toxsoft.core.tslib.bricks.validator.impl.*;
 import org.toxsoft.core.tslib.coll.*;
 import org.toxsoft.core.tslib.coll.helpers.*;
@@ -105,6 +106,9 @@ public class SkSadFolder
 
   @Override
   public ISkSadDocument findDocument( String aDocumentId ) {
+    if( !StridUtils.isValidIdPath( aDocumentId ) ) {
+      return null;
+    }
     Skid skid = new Skid( docClassId, aDocumentId );
     return coreApi().objService().find( skid );
   }

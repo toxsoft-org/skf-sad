@@ -62,8 +62,7 @@ public class SkExtServiceSad
   private class Eventer
       extends AbstractTsEventer<ISkSadServiceListener> {
 
-    record Item ( ECrudOp op, String id ) {
-    }
+    record Item ( ECrudOp op, String id ) {}
 
     final IStringMapEdit<Item> docCrudEvMap = new StringMap<>();
 
@@ -505,8 +504,6 @@ public class SkExtServiceSad
   public ISkSadFolder createFolder( String aFolderId, IOptionSet aParams ) {
     TsValidationFailedRtException.checkError( svs.validator().canCreateFolder( aFolderId, aParams ) );
     // prepare attributes and remove system attributes if any found in aParameters
-    String name = aParams.getStr( AID_NAME, EMPTY_STRING );
-    String description = aParams.getStr( AID_DESCRIPTION, EMPTY_STRING );
     IOptionSetEdit params = new OptionSet();
     for( String pid : aParams.keys() ) {
       if( !isSkSysAttrId( pid ) ) {
@@ -523,8 +520,8 @@ public class SkExtServiceSad
       // create folder object
       Skid skid = new Skid( CLSID_SAD_FOLDER, aFolderId );
       DtoObject dto = new DtoObject( skid );
-      dto.attrs().setStr( AID_NAME, name );
-      dto.attrs().setStr( AID_DESCRIPTION, description );
+      dto.attrs().setStr( AID_NAME, aParams.getStr( AID_NAME, EMPTY_STRING ) );
+      dto.attrs().setStr( AID_DESCRIPTION, aParams.getStr( AID_DESCRIPTION, EMPTY_STRING ) );
       dto.attrs().setValobj( ATRID_PARAMS, params );
       folder = objServ().defineObject( dto );
       // inform siblings

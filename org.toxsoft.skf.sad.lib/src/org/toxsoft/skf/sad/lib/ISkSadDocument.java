@@ -38,6 +38,10 @@ public interface ISkSadDocument
    * If document can not be opened for any reason, returns {@link Pair#left()} = <code>null</code> and
    * {@link Pair#right()} containing the reason of the failure. On success, {@link Pair#right()} contains
    * {@link ValidationResult#SUCCESS}.
+   * <p>
+   * The opening arguments may be empty - method implementation adds all necessary option to open the connection.
+   * However some application specific options may be passed as an arguments that further are passed to underlying
+   * {@link ISkConnection#open(ITsContextRo)}.
    *
    * @param aConn {@link ISkConnection} - created closed instance of the connection
    * @param aArgs {@link ITsContext} - the opening arguments
@@ -110,7 +114,7 @@ public interface ISkSadDocument
   void setNameAndDescription( String aName, String aDescription );
 
   /**
-   * Gets SAD document content from the server and writes itto the local file.
+   * Gets SAD document content from the server and writes it to the local file.
    *
    * @param aLocalFile {@link File} - local file to write document content
    * @throws TsNullArgumentRtException any argument = <code>null</code>

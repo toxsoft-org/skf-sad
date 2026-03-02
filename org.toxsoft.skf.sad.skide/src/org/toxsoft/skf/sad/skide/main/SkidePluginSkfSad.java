@@ -38,7 +38,7 @@ public class SkidePluginSkfSad
 
   @Override
   protected void doCreateUnits( ITsGuiContext aContext, IStridablesListEdit<ISkideUnit> aUnitsList ) {
-    aUnitsList.add( new SkideUnitSkfSadOne( aContext, this ) );
+    aUnitsList.add( new SkideUnitSadManager( aContext, this ) );
   }
 
 }
