@@ -53,7 +53,7 @@ public abstract class AspExpImpSadContent
           doc.downloadSadContentToTheFile( f );
         }
         catch( Exception ex ) {
-          LoggerUtils.errorLogger().error( ex );
+          LoggerUtils.error( ex );
           TsDialogUtils.error( getShell(), ex );
         }
       }
@@ -69,7 +69,7 @@ public abstract class AspExpImpSadContent
           doc.uploadSadContentFromTheFile( f );
         }
         catch( Exception ex ) {
-          LoggerUtils.errorLogger().error( ex );
+          LoggerUtils.error( ex );
           TsDialogUtils.error( getShell(), ex );
         }
       }
